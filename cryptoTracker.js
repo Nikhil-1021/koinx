@@ -66,6 +66,23 @@ app.get('/crypto', (req, res) => {
   res.json(cryptoData);
 });
 
+// Endpoint to get stats for a specific cryptocurrency
+app.get('/stats', (req, res) => {
+  const { coin } = req.query;
+
+  if (!coin || !cryptoData[coin]) {
+    return res.status(400).json({ error: 'Invalid or missing coin parameter. Please provide one of: bitcoin, matic-network, ethereum.' });
+  }
+
+  const { current_price, market_cap, change_24h } = cryptoData[coin];
+
+  res.json({
+    price: current_price,
+    marketCap: market_cap,
+    "24hChange": change_24h,
+  });
+});
+
 // Start the server
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
